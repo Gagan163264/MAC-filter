@@ -50,8 +50,10 @@ def add():
             phno = request.form['mob']
             nmon = request.form['nmon']
             print(name, MAC, phno)
-            addMAC([phno,MAC,name,nmon])
-            return redirect(url_for('home'))
+            if addMAC([phno,MAC,name,nmon]):
+                return redirect(url_for('home'))
+            else:
+                response = "Record already exists, to update go to 'Update record' option'"
         return render_template('add.html', response=response)
     else:
         return redirect(url_for('login'))
