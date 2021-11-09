@@ -49,7 +49,6 @@ def add():
             MAC = request.form['MAC']
             phno = request.form['mob']
             nmon = request.form['nmon']
-            print(name, MAC, phno)
             if addMAC([phno,MAC,name,nmon]):
                 return redirect(url_for('home'))
             else:
