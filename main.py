@@ -53,7 +53,7 @@ def add():
             if addMAC([phno,MAC,name,nmon]):
                 return redirect(url_for('home'))
             else:
-                response = "Record already exists, to update go to 'Update record' option'"
+                response = "Record already exists, to update go to 'Update record' option"
         return render_template('add.html', response=response)
     else:
         return redirect(url_for('login'))
