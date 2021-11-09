@@ -60,6 +60,7 @@ def addMAC(data):
     name = data[2]
     phonenum = data[0]
     MAC = data[1]
+    MAC = MAC.upper()
     nmon = int(data[3])
     date = datetime.datetime.today().strftime('%d-%m-%Y')
     addstr = 'dhcp-host='+MAC+',set:known\n'
@@ -106,6 +107,7 @@ def displayMAC():
 def delMAC(data):
     config = loadconfig()
     MAC = data[1]
+    MAC = MAC.upper()
     phonenum = data[0]
     write_dump("Delete||"+config[phonenum][1]+"||"+phonenum+"||"+MAC+"||"+str(config[phonenum][0][MAC][0])+"||"+config[phonenum][0][MAC][1]+"\n")
     if phonenum not in config.keys():
@@ -128,10 +130,11 @@ def delMAC(data):
 def updateMAC(data):
     config = loadconfig()
     MAC = data[1]
+    MAC = MAC.upper()
     phonenum = data[0]
     nmonnew = int(data[2])
     if phonenum not in config.keys():
-        return 0
+        return [0,0]
     mac = config[phonenum][0]
     if MAC not in mac:
         return [0,0]
