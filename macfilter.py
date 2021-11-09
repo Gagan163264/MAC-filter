@@ -69,12 +69,15 @@ def addMAC(data):
         mac = {}
     #dt = datetime.datetime.now() + datetime.timedelta(30)*nmon
     #mac[MAC] = dt.strftime('%d-%m-%Y')
+    if MAC in mac.keys():
+        return 0
     mac[MAC] = [nmon, date]
     config[phonenum]=[mac, name]
     with open(macfile, "a") as omacfile:
         omacfile.write(addstr)
     write_dump("Add||"+name+"||"+phonenum+"||"+MAC+"||"+str(nmon)+"||"+date+"\n")
     store_data(config)
+    return 1
 
 def displayMAC():
     config = loadconfig()
@@ -88,10 +91,15 @@ def displayMAC():
         for mac in config[phn][0]:
             if mac == 0:
                 continue
-            dreg = datetime.datetime.strptime(config[phn][0][mac][1], '%d-%m-%Y')
-            dt = dreg + datetime.timedelta(30)*int(config[phn][0][mac][0])
-            dt = dt.strftime('%d-%m-%Y')
-            strn += mac+"\n"+str(config[phn][0][mac][1])+" to "+dt +"("+str(config[phn][0][mac][0])+" months)\n\n"
+            strn += mac+"\n"
+            nmon = int(config[phn][0][mac][0])
+            if nmon == 0:
+                strn+="MAC disabled"
+            else:
+                dreg = datetime.datetime.strptime(config[phn][0][mac][1], '%d-%m-%Y')
+                dt = dreg + datetime.timedelta(30)*nmon
+                dt = dt.strftime('%d-%m-%Y')
+                strn += str(config[phn][0][mac][1])+" to "+dt +"("+str(config[phn][0][mac][0])+" months)\n\n"
         strn+= "\n\n\n"
     return strn
 
@@ -151,6 +159,7 @@ def cleaner():
             dt = dreg + datetime.timedelta(30)*int(config[phn][0][mac][0])
             dt = dt.strftime('%d-%m-%Y')
             if dt==date:
-                delMAC([phn, mac])
-                write_dump("Auto-deleted||"+config[phn][1]+"||"+phn+"||"+MAC+"||"+str(config[phn][0][mac][0])+"||"+config[phn][0][mac][1]+"\n")
+                config[phn][0][mac][0]=0
+                store_data(config)
+                write_dump("Auto-disabled||"+config[phn][1]+"||"+phn+"||"+MAC+"||"+str(config[phn][0][mac][0])+"||"+config[phn][0][mac][1]+"\n")
     return 1
